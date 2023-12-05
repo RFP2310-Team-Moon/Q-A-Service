@@ -132,4 +132,4 @@ dist
 
 .eslintrc.json
 
-.prettierrc
+.prettierrc.json
