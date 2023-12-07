@@ -9,3 +9,6 @@ SELECT COUNT(*) FROM "Answers";
 \copy "Photos"(id,answer_id,url) FROM './csv_data/answers_photos.csv' WITH CSV HEADER;
 -- should equal 2063759
 SELECT COUNT(*) FROM "Photos";
+
+
+-- select * from "Questions" where product_id = 1000011;

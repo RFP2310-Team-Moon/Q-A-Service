@@ -2,21 +2,23 @@ const router = require('express').Router();
 const controllers = require('./controllers');
 
 // write the routes based on the controllers...
-router.get('/qa/questions', controllers.questions.getQuestions);
-router.post('/qa/questions', controllers.questions.postQuestion);
-router.put(
-  '/qa/questions/:question_id/report',
-  controllers.questions.helpfulQuestion
-);
-router.put(
-  '/qa/questions/:question_id/helpful',
-  controllers.questions.reportQuestion
-);
+router
+  .route('/qa/questions/:product_id')
+  .get(controllers.questions.getQuestions);
+router
+  .route('/qa/questions/:product_id')
+  .get(controllers.questions.postQuestion);
+router
+  .route('/qa/questions/:question_id/helpful')
+  .put(controllers.questions.helpfulQuestion);
+router
+  .route('/qa/questions/:question_id/report')
+  .put(controllers.questions.reportQuestion);
 
-router.get(
-  '/qa/questions/:question_id/answers',
-  controllers.answers.getAnswers
-);
+// ANSWERS
+router
+  .route('/qa/questions/:question_id/answers')
+  .get(controllers.answers.getAnswers);
 router.post(
   '/qa/questions/:question_id/answers',
   controllers.answers.postAnswer

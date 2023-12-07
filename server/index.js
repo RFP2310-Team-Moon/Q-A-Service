@@ -3,15 +3,17 @@ const express = require('express');
 const router = require('./router');
 
 const app = express();
-const port = process.env.PORT;
+const port = 3000;
 
 app.use(express.json());
-app.use('/', router);
+app.use('/api', router);
+
+// build the endpoint
 
 app.listen(port, (err) => {
   if (err) {
     console.log('Error starting server');
   } else {
-    console.log('Server running on port: ', port);
+    console.log('Server listening on port: ', port);
   }
 });

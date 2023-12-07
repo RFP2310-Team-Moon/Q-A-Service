@@ -132,12 +132,9 @@ dist
 
 .eslintrc.json
 
-<<<<<<< HEAD
 .prettierrc.json
 
 # csv data
 csv_data/
+# all csv files
 *.csv
-=======
-.prettierrc.json
->>>>>>> 3d911d24d18022bb95d15a201346845d9b9357bf
