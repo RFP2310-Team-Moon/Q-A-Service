@@ -1,4 +1,4 @@
-const csv = require('csvtojson');
+// const csv = require('csvtojson');
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./server/db');
 
