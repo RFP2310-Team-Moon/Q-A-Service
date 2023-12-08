@@ -6,7 +6,7 @@ module.exports = {
   questions: {
     getQuestions: async (req, res) => {
       try {
-        let { product_id } = req.params;
+        const { product_id } = req.params;
         let { page, count } = req.query;
         if (!page) {
           page = 1;
@@ -15,25 +15,66 @@ module.exports = {
           count = 5;
         }
         const offset = (page - 1) * count;
-        // this is the only sequelize that I'm using at the moment
+
         const questions = await Questions.findAll({
+          include: [
+            {
+              model: Answers,
+              attributes: [
+                'id',
+                'body',
+                'date_written',
+                'answerer_name',
+                'helpful',
+              ],
+              include: [
+                {
+                  model: Photos,
+                  attributes: ['url'],
+                },
+              ],
+            },
+          ],
           where: { product_id },
           limit: count,
           offset,
         });
-        // need to attach the proper values to match initial api interactions??
-        // the questions are sent attached to results?? also attach the answers...
-        res.status(200).send(questions);
+
+        const response = {
+          product_id,
+          results: questions.map((question) => ({
+            question_id: question.id,
+            question_body: question.body,
+            question_date: question.date_written,
+            asker_name: question.asker_name,
+            question_helpfulness: question.helpful,
+            reported: question.reported,
+            answers: question.Answers.reduce((acc, answer) => {
+              const { id, body, date_written, answerer_name, helpful, Photos } =
+                answer;
+              const answerObj = {
+                id,
+                body,
+                date: date_written,
+                answerer_name,
+                helpfulness: helpful,
+                photos: Photos,
+              };
+              acc[id] = answerObj;
+              return acc;
+            }, {}),
+          })),
+        };
+        res.status(200).send(response);
       } catch (error) {
         console.error('Error retriving Questions. Error: ', error);
         res.status(500).send('Internal Server Error');
       }
     },
     postQuestion: async (req, res) => {
-      console.log('hit');
       try {
-        let { body, asker_name, asker_email, product_id } = req.body;
-        let event = new Date();
+        const { body, asker_name, asker_email, product_id } = req.body;
+        const event = new Date();
         const isoDateTime = event.toISOString();
         await Questions.create(
           {
@@ -70,7 +111,7 @@ module.exports = {
   answers: {
     getAnswers: async (req, res) => {
       try {
-        let { question_id } = req.params;
+        const { question_id } = req.params;
         let { page, count } = req.query;
         if (!page) {
           page = 1;
@@ -90,7 +131,45 @@ module.exports = {
         res.status(500).send('Internal Server Error');
       }
     },
-    postAnswer: (req, res) => {},
+    postAnswer: async (req, res) => {
+      try {
+        const { question_id } = req.params;
+        const { body, name, email, photos } = req.body;
+        // will need to insert photos into the photos table...
+        const event = new Date();
+        const isoDateTime = event.toISOString();
+        await Answers.create(
+          {
+            question_id,
+            body,
+            date_written: isoDateTime,
+            answerer_name: name,
+            answerer_email: email,
+            reported: false,
+            helpful: 0,
+          },
+          {
+            fields: [
+              'id',
+              'question_id',
+              'body',
+              'date_written',
+              'answerer_name',
+              'answerer_email',
+              'reported',
+              'helpful',
+            ],
+          }
+        );
+        if (photos) {
+          await Photos.create({});
+        }
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error posting answer to Answers. Error: ', error);
+        res.status(500).send('Internal Server Error');
+      }
+    },
     reportAnswer: (req, res) => {},
     helpfulAnswer: (req, res) => {},
   },
