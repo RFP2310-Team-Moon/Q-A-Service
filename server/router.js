@@ -5,9 +5,7 @@ const controllers = require('./controllers');
 router
   .route('/qa/questions/:product_id')
   .get(controllers.questions.getQuestions);
-router
-  .route('/qa/questions/:product_id')
-  .get(controllers.questions.postQuestion);
+router.route('/qa/questions').post(controllers.questions.postQuestion);
 router
   .route('/qa/questions/:question_id/helpful')
   .put(controllers.questions.helpfulQuestion);
