@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const controllers = require('./controllers');
 
-// write the routes based on the controllers...
+// QUESTIONS
 router
   .route('/qa/questions/:product_id')
   .get(controllers.questions.getQuestions);
