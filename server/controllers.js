@@ -105,9 +105,32 @@ module.exports = {
         res.status(500).send('Internal Server Error');
       }
     },
-    reportQuestion: (req, res) => {},
-    helpfulQuestion: (req, res) => {},
+    reportQuestion: async (req, res) => {
+      try {
+        const { question_id } = req.params;
+        const question = await Questions.findByPk(question_id);
+        question.update({ reported: true });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error reporting question. Error: ', error);
+        res.status(500).send('Internal Server Error');
+      }
+    },
+    helpfulQuestion: async (req, res) => {
+      try {
+        const { question_id } = req.params;
+        const question = await Questions.findByPk(question_id);
+        question.increment(['helpful'], {
+          by: 1,
+        });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error unable to add helpful. Error: ', error);
+        res.status(500).send('Internal Server Error');
+      }
+    },
   },
+  // ANSWERS
   answers: {
     getAnswers: async (req, res) => {
       try {
@@ -121,10 +144,12 @@ module.exports = {
         }
         const offset = (page - 1) * count;
         const answers = await Answers.findAll({
+          include: [{ model: Photos, attributes: ['url'] }],
           where: { question_id },
           limit: count,
           offset,
         });
+        // answers.loop
         res.status(200).send(answers);
       } catch (error) {
         console.error('Error retrieving Answers. Error: ', error);
@@ -170,7 +195,29 @@ module.exports = {
         res.status(500).send('Internal Server Error');
       }
     },
-    reportAnswer: (req, res) => {},
-    helpfulAnswer: (req, res) => {},
+    reportAnswer: async (req, res) => {
+      try {
+        const { answer_id } = req.params;
+        const answer = await Answers.findByPk(answer_id);
+        answer.update({ reported: true });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error reporting question. Error: ', error);
+        res.status(500).send('Internal Server Error');
+      }
+    },
+    helpfulAnswer: async (req, res) => {
+      try {
+        const { answer_id } = req.params;
+        const answer = await Answers.findByPk(answer_id);
+        answer.increment(['helpful'], {
+          by: 1,
+        });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error unable to add helpful. Error: ', error);
+        res.status(500).send('Internal Server Error');
+      }
+    },
   },
 };

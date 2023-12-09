@@ -21,13 +21,7 @@ router.post(
   '/qa/questions/:question_id/answers',
   controllers.answers.postAnswer
 );
-router.put(
-  '/qa/questions/:answer_id/report',
-  controllers.answers.helpfulAnswer
-);
-router.put(
-  '/qa/questions/:answer_id/helpful',
-  controllers.answers.reportAnswer
-);
+router.put('/qa/answers/:answer_id/helpful', controllers.answers.helpfulAnswer);
+router.put('/qa/answers/:answer_id/report', controllers.answers.reportAnswer);
 
 module.exports = router;
