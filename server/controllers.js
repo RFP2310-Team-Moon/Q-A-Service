@@ -160,6 +160,7 @@ module.exports = {
       try {
         const { question_id } = req.params;
         const { body, name, email, photos } = req.body;
+        console.log(req.body);
         // will need to insert photos into the photos table...
         const event = new Date();
         const isoDateTime = event.toISOString();
