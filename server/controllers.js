@@ -1,5 +1,6 @@
-const db = require('./db');
+// const db = require('./db');
 const { Questions, Answers, Photos } = require('../postgres');
+const { getAllQuestions } = require('./models');
 
 module.exports = {
   // handle requests and use sequelize to hanldle req, res
@@ -15,56 +16,9 @@ module.exports = {
           count = 5;
         }
         const offset = (page - 1) * count;
-
-        const questions = await Questions.findAll({
-          include: [
-            {
-              model: Answers,
-              attributes: [
-                'id',
-                'body',
-                'date_written',
-                'answerer_name',
-                'helpful',
-              ],
-              include: [
-                {
-                  model: Photos,
-                  attributes: ['url'],
-                },
-              ],
-            },
-          ],
-          where: { product_id },
-          limit: count,
-          offset,
-        });
-
-        const response = {
-          product_id,
-          results: questions.map((question) => ({
-            question_id: question.id,
-            question_body: question.body,
-            question_date: question.date_written,
-            asker_name: question.asker_name,
-            question_helpfulness: question.helpful,
-            reported: question.reported,
-            answers: question.Answers.reduce((acc, answer) => {
-              const { id, body, date_written, answerer_name, helpful, Photos } =
-                answer;
-              const answerObj = {
-                id,
-                body,
-                date: date_written,
-                answerer_name,
-                helpfulness: helpful,
-                photos: Photos,
-              };
-              acc[id] = answerObj;
-              return acc;
-            }, {}),
-          })),
-        };
+        // MODEL STARTS HERE
+        const response = await getAllQuestions(product_id, count, offset);
+        // MODEL ENDS HERE
         res.status(200).send(response);
       } catch (error) {
         console.error('Error retriving Questions. Error: ', error);
@@ -160,7 +114,6 @@ module.exports = {
       try {
         const { question_id } = req.params;
         const { body, name, email, photos } = req.body;
-        console.log(req.body);
         // will need to insert photos into the photos table...
         const event = new Date();
         const isoDateTime = event.toISOString();

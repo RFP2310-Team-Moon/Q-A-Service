@@ -81,7 +81,7 @@ const Answers = sequelize.define(
 );
 
 const Photos = sequelize.define(
-  'Photo',
+  'Photos',
   {
     id: {
       type: DataTypes.INTEGER,

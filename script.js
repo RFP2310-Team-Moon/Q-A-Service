@@ -6,12 +6,34 @@ export const options = {
   // vus: 100,
   // A string specifying the total duration of the test run.
   // duration: '10s',
-  stages: [
-    { duration: '1s', target: 1 },
-    { duration: '2s', target: 1000 },
-    { duration: '6s', target: 10000 },
-    { duration: '1s', target: 1000 },
-  ],
+
+  // THIS IS LOCKED!!!
+  // stages: [
+  //   { duration: '2s', target: 1000 },
+  //   { duration: '4s', target: 10000 },
+  //   { duration: '5s', target: 10000 },
+  //   { duration: '2s', target: 15000 },
+  // ],
+
+  // vus: 1000,
+  // duration: '10s',
+  // stages: [
+  //   { duration: '1s', target: 1000 },
+  //   { duration: '5s', target: 10000 },
+  //   { duration: '5s', target: 15000 },
+  //   { duration: '10s', target: 10000 },
+  // ],
+
+  scenarios: {
+    constant_request_rate: {
+      executor: 'constant-arrival-rate',
+      rate: 1000,
+      timeUnit: '1s', // 1000 iterations per second, i.e. 1000 RPS
+      duration: '30s',
+      preAllocatedVUs: 100, // how large the initial pool of VUs would be
+      maxVUs: 200, // if the preAllocatedVUs are not enough, we can initialize more
+    },
+  },
 
   // The following section contains configuration options for execution of this
   // test script in Grafana Cloud.
@@ -64,5 +86,5 @@ export const options = {
 export default function () {
   // http.get('https://test.k6.io');
   http.get('http://localhost:3000/api/qa/questions/1000011');
-  sleep(1);
+  // sleep(1);
 }
