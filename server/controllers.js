@@ -1,13 +1,25 @@
 // const db = require('./db');
-const { Questions, Answers, Photos } = require('../postgres');
+// const { Questions, Answers, Photos } = require('../postgres');
+const { redisClient } = require('./db');
 const models = require('./models');
 
 module.exports = {
   questions: {
     getQuestions: async (req, res) => {
+      const { product_id } = req.params;
+      let isCached = false;
+      let response;
       try {
-        const response = await models.getAllQuestions(req);
-        res.status(200).send(response);
+        const cacheResults = await redisClient.get(product_id);
+        if (cacheResults) {
+          isCached = true;
+          response = JSON.parse(cacheResults);
+        } else {
+          response = await models.getAllQuestions(req);
+          await redisClient.set(product_id, JSON.stringify(response));
+        }
+        console.log(isCached);
+        await res.status(200).send(response);
       } catch (error) {
         console.error('Error retriving Questions. Error: ', error);
         res.status(500).send('Internal Server Error');
