@@ -1,28 +1,27 @@
-// const db = require('./db');
-// const { Questions, Answers, Photos } = require('../postgres');
 const { redisClient } = require('./db');
 const models = require('./models');
 
 module.exports = {
   questions: {
     getQuestions: async (req, res) => {
-      const { product_id } = req.params;
-      const { page, count } = req.query;
-      const key = `Q${product_id} + ${page} + ${count}`;
-      let isCached = false;
+      // const { product_id } = req.params;
+      // const { page, count } = req.query;
+      // const key = `Q${product_id} + ${page} + ${count}`;
+      // let isCached = false;
       let response;
       try {
-        const cacheResults = await redisClient.get(key);
-        if (cacheResults) {
-          isCached = true;
-          response = JSON.parse(cacheResults);
-        } else {
-          response = await models.getAllQuestions(req);
-          await redisClient.set(key, JSON.stringify(response), {
-            EX: 30,
-          });
-        }
-        console.log(isCached);
+        //   const cacheResults = await redisClient.get(key);
+        //   if (cacheResults) {
+        //     // isCached = true;
+        //     response = JSON.parse(cacheResults);
+        //   } else {
+        //     response = await models.getAllQuestions(req);
+        //     await redisClient.set(key, JSON.stringify(response), {
+        //       EX: 30,
+        //     });
+        //   }
+        response = await models.getAllQuestions(req);
+        // console.log(isCached);
         await res.status(200).send(response);
       } catch (error) {
         console.error('Error retriving Questions. Error: ', error);
@@ -61,23 +60,24 @@ module.exports = {
   // ANSWERS
   answers: {
     getAnswers: async (req, res) => {
-      const { question_id } = req.params;
-      const { page, count } = req.query;
-      const key = `A${question_id} + ${page} + ${count}`;
-      let isCached = false;
+      // const { question_id } = req.params;
+      // const { page, count } = req.query;
+      // const key = `A${question_id} + ${page} + ${count}`;
+      // let isCached = false;
       let response;
       try {
-        const cacheResults = await redisClient.get(key);
-        if (cacheResults) {
-          isCached = true;
-          response = JSON.parse(cacheResults);
-        } else {
-          response = await models.getAllAnswers(req);
-          await redisClient.set(key, JSON.stringify(response), {
-            EX: 30,
-          });
-        }
-        console.log(isCached);
+        // const cacheResults = await redisClient.get(key);
+        // if (cacheResults) {
+        //   isCached = true;
+        //   response = JSON.parse(cacheResults);
+        // } else {
+        //   response = await models.getAllAnswers(req);
+        //   await redisClient.set(key, JSON.stringify(response), {
+        //     EX: 30,
+        //   });
+        // }
+        response = await models.getAllAnswers(req);
+        // console.log(isCached);
         res.status(200).send(response);
       } catch (error) {
         console.error('Error retrieving Answers. Error: ', error);

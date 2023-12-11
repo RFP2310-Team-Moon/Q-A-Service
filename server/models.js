@@ -1,5 +1,4 @@
 const { Questions, Answers, Photos } = require('../postgres');
-const { redisClient } = require('./db');
 
 module.exports = {
   getAllQuestions: async (req) => {
