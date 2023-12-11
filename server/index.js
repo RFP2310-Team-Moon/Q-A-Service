@@ -8,8 +8,6 @@ const port = 3000;
 app.use(express.json());
 app.use('/api', router);
 
-// build the endpoint
-
 app.listen(port, (err) => {
   if (err) {
     console.log('Error starting server');

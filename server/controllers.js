@@ -3,7 +3,6 @@ const { Questions, Answers, Photos } = require('../postgres');
 const models = require('./models');
 
 module.exports = {
-  // handle requests and use sequelize to hanldle req, res
   questions: {
     getQuestions: async (req, res) => {
       try {

@@ -7,7 +7,7 @@ export const options = {
   // A string specifying the total duration of the test run.
   // duration: '10s',
 
-  // THIS IS LOCKED!!!
+  // THIS IS LOCKED!!! - RAMP UP TEST
   // stages: [
   //   { duration: '2s', target: 1000 },
   //   { duration: '4s', target: 10000 },
@@ -24,6 +24,7 @@ export const options = {
   //   { duration: '10s', target: 10000 },
   // ],
 
+  // CONSTANT HIT TEST WITH ~1000 RPS
   scenarios: {
     constant_request_rate: {
       executor: 'constant-arrival-rate',
