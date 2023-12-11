@@ -7,16 +7,20 @@ module.exports = {
   questions: {
     getQuestions: async (req, res) => {
       const { product_id } = req.params;
+      const { page, count } = req.query;
+      const key = `Q${product_id} + ${page} + ${count}`;
       let isCached = false;
       let response;
       try {
-        const cacheResults = await redisClient.get(product_id);
+        const cacheResults = await redisClient.get(key);
         if (cacheResults) {
           isCached = true;
           response = JSON.parse(cacheResults);
         } else {
           response = await models.getAllQuestions(req);
-          await redisClient.set(product_id, JSON.stringify(response));
+          await redisClient.set(key, JSON.stringify(response), {
+            EX: 30,
+          });
         }
         console.log(isCached);
         await res.status(200).send(response);
@@ -29,6 +33,7 @@ module.exports = {
       try {
         await models.postQuestion(req);
         res.status(201).send();
+        // update redis with the proper values from DB after sending response?
       } catch (error) {
         console.error('Error adding question. Error: ', error);
         res.status(500).send('Internal Server Error');
@@ -56,9 +61,24 @@ module.exports = {
   // ANSWERS
   answers: {
     getAnswers: async (req, res) => {
+      const { question_id } = req.params;
+      const { page, count } = req.query;
+      const key = `A${question_id} + ${page} + ${count}`;
+      let isCached = false;
+      let response;
       try {
-        const answers = await models.getAllAnswers(req);
-        res.status(200).send(answers);
+        const cacheResults = await redisClient.get(key);
+        if (cacheResults) {
+          isCached = true;
+          response = JSON.parse(cacheResults);
+        } else {
+          response = await models.getAllAnswers(req);
+          await redisClient.set(key, JSON.stringify(response), {
+            EX: 30,
+          });
+        }
+        console.log(isCached);
+        res.status(200).send(response);
       } catch (error) {
         console.error('Error retrieving Answers. Error: ', error);
         res.status(500).send('Internal Server Error');
