@@ -3,7 +3,9 @@ const controllers = require('./controllers');
 require('dotenv').config();
 
 // LOADER_IO
-router.route(`/${process.env.LOADER_IO}`).get(process.env.LOADER_IO);
+router
+  .route(`/${process.env.LOADER_IO}`)
+  .get(controllers.loaderIO.getVerification);
 
 // QUESTIONS
 router

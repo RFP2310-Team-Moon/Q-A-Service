@@ -5,7 +5,7 @@ module.exports = {
   loaderIO: {
     getVerification: async (req, res) => {
       try {
-        res.send(process.env.LOADER_IO);
+        res.status(200).send(process.env.LOADER_IO);
       } catch (error) {
         console.error('error with LoaderIO');
         res.status(500).send();
