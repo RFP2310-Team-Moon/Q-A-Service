@@ -2,6 +2,16 @@ const { redisClient } = require('./db');
 const models = require('./models');
 
 module.exports = {
+  loaderIO: {
+    getVerification: async (req, res) => {
+      try {
+        res.send(process.env.LOADER_IO);
+      } catch (error) {
+        console.error('error with LoaderIO');
+        res.status(500).send();
+      }
+    },
+  },
   questions: {
     getQuestions: async (req, res) => {
       // const { product_id } = req.params;

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Questions (
 );
 
 -- will this create the correct index?
-CREATE INDEX idx_product_id ON Questions(product_id);
+CREATE INDEX idx_product_id ON "Questions"(product_id);
 
 CREATE TABLE Answers (
   id SERIAL PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE Answers (
   helpful INTEGER
 );
 
-CREATE INDEX idx_question_id ON Answers(question_id);
+CREATE INDEX idx_question_id ON "Answers"(question_id);
 
 CREATE TABLE IF NOT EXISTS Photos (
   id SERIAL PRIMARY KEY,
@@ -32,9 +32,10 @@ CREATE TABLE IF NOT EXISTS Photos (
   url VARCHAR(400) NOT NULL
 )
 
-CREATE INDEX idx_answer_id ON Photos(answer_id);
+CREATE INDEX idx_answer_id ON "Photos"(answer_id);
 
 \copy "Questions"(id,product_id,body,date_written,asker_name,asker_email,reported,helpful) FROM './csv_data/questions.csv' WITH CSV HEADER;
+-- \copy "Questions"(id,product_id,body,date_written,asker_name,asker_email,reported,helpful) FROM './data/questions.csv' WITH CSV HEADER;
 -- should equal 3518963
 SELECT COUNT(*) FROM "Questions";
 
@@ -58,7 +59,5 @@ ALTER SEQUENCE "Answers_id_seq" RESTART WITH 6879307;
 SELECT * FROM "Answers_id_seq";
 ALTER SEQUENCE "Photos_id_seq" RESTART WITH 2063760;
 SELECT * FROM "Photos_id_seq";
-
-
 
 -- select * from "Questions" where product_id = 1000011;
