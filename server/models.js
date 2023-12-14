@@ -1,9 +1,10 @@
 const { Questions, Answers, Photos } = require('../postgres');
 
 module.exports = {
-  getAllQuestions: async (req) => {
-    const { product_id } = req.params;
-    let { page, count } = req.query;
+  getAllQuestions: async (product_id, page, count) => {
+    // const { product_id } = req.params;
+    // let { page, count } = req.query;
+    // console.log('hit');
     if (!page) {
       page = 1;
     }

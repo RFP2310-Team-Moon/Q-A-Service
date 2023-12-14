@@ -7,6 +7,9 @@ router
   .route(`/${process.env.LOADER_IO}`)
   .get(controllers.loaderIO.getVerification);
 
+// RNG TEST ENDPOINT
+router.route('/qa/questions').get(controllers.questions.getRandomQuestions);
+
 // QUESTIONS
 router
   .route('/qa/questions/:product_id')

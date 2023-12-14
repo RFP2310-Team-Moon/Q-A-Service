@@ -1,4 +1,4 @@
-const { redisClient } = require('./db');
+// const { redisClient } = require('./db');
 const models = require('./models');
 
 module.exports = {
@@ -13,24 +13,56 @@ module.exports = {
     },
   },
   questions: {
+    getRandomQuestions: async (req, res) => {
+      // RNG
+      const MIN = 900000;
+      const MAX = 1000000;
+      function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+      const product_id = await Math.round(getRandomArbitrary(MIN, MAX));
+      console.log(product_id);
+      // const RNG = console.log(product_id);
+      const reqBuilder = (product_id) => {
+        const newReq = {
+          params: null,
+          query: {
+            page: null,
+            count: null,
+          },
+        };
+        newReq.params = product_id;
+        newReq.query.page = 1;
+        newReq.query.count = 5;
+        return newReq;
+      };
+      const page = 1;
+      const count = 5;
+      const newReq = await reqBuilder(product_id);
+      // const page = 1;
+      // const count = 5;
+      console.log(newReq);
+      const response = await models.getAllQuestions(product_id, page, count);
+      await res.status(200).send(response);
+    },
     getQuestions: async (req, res) => {
-      // const { product_id } = req.params;
-      // const { page, count } = req.query;
+      const { product_id } = req.params;
+      const { page, count } = req.query;
       // const key = `Q${product_id} + ${page} + ${count}`;
       // let isCached = false;
       let response;
       try {
-        //   const cacheResults = await redisClient.get(key);
-        //   if (cacheResults) {
-        //     // isCached = true;
-        //     response = JSON.parse(cacheResults);
-        //   } else {
-        //     response = await models.getAllQuestions(req);
-        //     await redisClient.set(key, JSON.stringify(response), {
-        //       EX: 30,
-        //     });
-        //   }
-        response = await models.getAllQuestions(req);
+        // const cacheResults = await redisClient.get(key);
+        // if (cacheResults) {
+        //   // isCached = true;
+        //   response = JSON.parse(cacheResults);
+        // } else {
+        //   response = await models.getAllQuestions(req);
+        //   await redisClient.set(key, JSON.stringify(response), {
+        //     EX: 30,
+        //   });
+        // }
+        response = await models.getAllQuestions(product_id, page, count);
         // console.log(isCached);
         await res.status(200).send(response);
       } catch (error) {

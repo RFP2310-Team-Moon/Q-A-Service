@@ -40,6 +40,7 @@ CREATE INDEX idx_answer_id ON "Photos"(answer_id);
 SELECT COUNT(*) FROM "Questions";
 
 \copy "Answers"(id,question_id,body,date_written,answerer_name,answerer_email,reported,helpful) FROM './csv_data/answers.csv' WITH CSV HEADER;
+-- \copy "Answers"(id,question_id,body,date_written,answerer_name,answerer_email,reported,helpful) FROM './data/answers.csv' WITH CSV HEADER;
 -- should equal 6879306
 SELECT COUNT(*) FROM "Answers";
 
@@ -48,9 +49,9 @@ SELECT COUNT(*) FROM "Answers";
 SELECT COUNT(*) FROM "Photos";
 
 -- command that converts ts values to 'proper' UTC
--- alter table "Answers" alter column date_written TYPE TEXT USING TO_CHAR(TO_TIMESTAMP(date_written / 1000) AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"');
+alter table "Answers" alter column date_written TYPE TEXT USING TO_CHAR(TO_TIMESTAMP(date_written / 1000) AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"');
 
--- alter table "Questions" alter column date_written TYPE TEXT USING TO_CHAR(TO_TIMESTAMP(date_written / 1000) AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"');
+alter table "Questions" alter column date_written TYPE TEXT USING TO_CHAR(TO_TIMESTAMP(date_written / 1000) AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"');
 
 -- this resets the sequence to the correct ID on insert for POST requests
 ALTER SEQUENCE "Questions_id_seq" RESTART WITH 3518964;
