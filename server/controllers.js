@@ -21,8 +21,6 @@ module.exports = {
         return Math.random() * (max - min) + min;
       }
       const product_id = await Math.round(getRandomArbitrary(MIN, MAX));
-      console.log(product_id);
-      // const RNG = console.log(product_id);
       const reqBuilder = (product_id) => {
         const newReq = {
           params: null,
@@ -38,10 +36,6 @@ module.exports = {
       };
       const page = 1;
       const count = 5;
-      const newReq = await reqBuilder(product_id);
-      // const page = 1;
-      // const count = 5;
-      console.log(newReq);
       const response = await models.getAllQuestions(product_id, page, count);
       await res.status(200).send(response);
     },
